@@ -1,0 +1,67 @@
+#define RED_PIN 9
+#define GREEN_PIN 10
+#define BLUE_PIN 11
+#define BUTTON_PIN 6  // Button moved to D6
+
+bool systemOn = true;
+bool lastButtonState = HIGH;
+bool currentButtonState = HIGH;
+unsigned long lastDebounceTime = 0;
+unsigned long debounceDelay = 50;
+
+void setup() {
+  pinMode(RED_PIN, OUTPUT);
+  pinMode(GREEN_PIN, OUTPUT);
+  pinMode(BLUE_PIN, OUTPUT);
+  pinMode(BUTTON_PIN, INPUT_PULLUP);
+
+  Serial.begin(9600); // For Bluetooth communication on TX/RX
+
+  setColor(0, 0, 0);
+}
+
+void loop() {
+  handleButton();
+  handleBluetooth();
+}
+
+void handleButton() {
+  currentButtonState = digitalRead(BUTTON_PIN);
+  if (currentButtonState != lastButtonState) {
+    lastDebounceTime = millis();
+  }
+  if ((millis() - lastDebounceTime) > debounceDelay) {
+    if (currentButtonState == LOW && lastButtonState == HIGH) {
+      systemOn = !systemOn;
+      if (!systemOn) {
+        setColor(0, 0, 0);
+      }
+    }
+  }
+  lastButtonState = currentButtonState;
+}
+
+void handleBluetooth() {
+  if (Serial.available()) {
+    char command = Serial.read();
+
+    if (systemOn) {
+      switch (command) {
+        case '1': setColor(255, 20, 147); break;   // Red ON
+        case '2': setColor(0, 0, 0); break;     // Red OFF
+        case '3': setColor(0, 255, 0); break;   // Green ON
+        case '4': setColor(0, 0, 0); break;     // Green OFF
+        case '7': setColor(0, 0, 255); break;   // Blue ON
+        case '6': setColor(0, 0, 0); break;     // Blue OFF
+      }
+    } else {
+      setColor(0, 0, 0); // LEDs OFF when system is off
+    }
+  }
+}
+
+void setColor(int red, int green, int blue) {
+  analogWrite(RED_PIN, red);
+  analogWrite(GREEN_PIN, green);
+  analogWrite(BLUE_PIN, blue);
+}
