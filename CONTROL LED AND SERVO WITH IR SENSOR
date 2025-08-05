@@ -1,0 +1,29 @@
+#include <Servo.h>  
+
+Servo myServo;  
+const int IRSensor = 2;  // IR sensor pin
+const int ledPin = 13;   // LED pin
+int servoAngle = 0;      // Initial servo position
+
+void setup() {
+  pinMode(IRSensor, INPUT);  
+  pinMode(ledPin, OUTPUT);  
+  myServo.attach(9);     // Servo on Pin 9
+  Serial.begin(9600);    // Optional: for debugging
+}
+
+void loop() {
+  int sensorValue = digitalRead(IRSensor);  
+
+  if (sensorValue == LOW) {  // IR detected (active LOW for most modules)
+    digitalWrite(ledPin, HIGH);  // Turn LED ON
+    servoAngle = 90;             // Move servo to 90°
+    myServo.write(servoAngle);  
+    Serial.println("Object detected! Servo moved & LED ON.");  
+  } else {  
+    digitalWrite(ledPin, LOW);   // Turn LED OFF
+    servoAngle = 0;              // Return servo to 0°
+    myServo.write(servoAngle);  
+  }
+  delay(100);  // Debounce delay
+}
