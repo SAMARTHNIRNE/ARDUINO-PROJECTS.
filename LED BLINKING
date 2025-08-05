@@ -1,0 +1,12 @@
+// LED Blinking on Arduino Pin 13
+
+void setup() {
+  pinMode(13, OUTPUT); // Set pin 13 as output
+}
+
+void loop() {
+  digitalWrite(13, HIGH);  // Turn ON LED
+  delay(1000);             // Wait for 1 second
+  digitalWrite(13, LOW);   // Turn OFF LED
+  delay(1000);             // Wait for 1 second
+}
