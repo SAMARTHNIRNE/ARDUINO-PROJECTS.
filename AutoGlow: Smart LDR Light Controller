@@ -1,0 +1,23 @@
+const int LDR_Pin = A0;  // LDR to A0
+const int LED_Pin = 9;    // LED to PWM Pin 9
+int LDR_Value = 0;        // Stores LDR readings
+int LED_Brightness = 0;   // Stores LED brightness (0-255)
+
+void setup() {
+  pinMode(LED_Pin, OUTPUT);
+  Serial.begin(9600);     // Optional: for debugging
+}
+
+void loop() {
+  LDR_Value = analogRead(LDR_Pin);            // Read LDR (0-1023)
+  LED_Brightness = map(LDR_Value, 0, 1023, 255, 0); // Invert & map to 0-255
+  analogWrite(LED_Pin, LED_Brightness);       // Set LED brightness
+
+  // Optional: Print values to Serial Monitor
+  Serial.print("LDR Value: ");
+  Serial.print(LDR_Value);
+  Serial.print(" | LED Brightness: ");
+  Serial.println(LED_Brightness);
+  
+  delay(100);  // Small delay for stability
+}
