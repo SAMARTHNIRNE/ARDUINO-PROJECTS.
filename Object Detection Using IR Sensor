@@ -1,0 +1,17 @@
+#define IR_SENSOR 2     // IR sensor output pin
+#define LED_PIN 13      // LED pin
+
+void setup() {
+  pinMode(IR_SENSOR, INPUT);
+  pinMode(LED_PIN, OUTPUT);
+}
+
+void loop() {
+  int sensorValue = digitalRead(IR_SENSOR);
+
+  if (sensorValue == LOW) {  // Object detected (many IR modules output LOW when triggered)
+    digitalWrite(LED_PIN, HIGH);  // Turn ON LED
+  } else {
+    digitalWrite(LED_PIN, LOW);   // Turn OFF LED
+  }
+}
