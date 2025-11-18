@@ -1,0 +1,50 @@
+#include <SoftwareSerial.h>
+
+SoftwareSerial BT(2, 3);  // RX, TX
+
+#define RELAY1 8   // Light
+#define RELAY2 9   // Fan
+// Add more if needed
+
+void setup() {
+  Serial.begin(9600);
+  BT.begin(9600);
+
+  pinMode(RELAY1, OUTPUT);
+  pinMode(RELAY2, OUTPUT);
+
+  digitalWrite(RELAY1, HIGH);   // Relay OFF
+  digitalWrite(RELAY2, HIGH);   // Relay OFF
+
+  Serial.println("Bluetooth Home Automation Ready");
+}
+
+void loop() {
+  if (BT.available()) {
+    char cmd = BT.read();
+    Serial.println(cmd);
+
+    switch (cmd) {
+
+      case 'A':                    
+        digitalWrite(RELAY1, LOW);    // Light ON
+        Serial.println("Light ON");
+        break;
+
+      case 'a':
+        digitalWrite(RELAY1, HIGH);   // Light OFF
+        Serial.println("Light OFF");
+        break;
+
+      case 'B':
+        digitalWrite(RELAY2, LOW);    // Fan ON
+        Serial.println("Fan ON");
+        break;
+
+      case 'b':
+        digitalWrite(RELAY2, HIGH);   // Fan OFF
+        Serial.println("Fan OFF");
+        break;
+    }
+  }
+}
